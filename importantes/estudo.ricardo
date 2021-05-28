@@ -1,0 +1,56 @@
+I have modified your systems in a way that the svxlink is starting automatically when starting the raspberry pi. I use systemd for that. 
+
+/etc/systemd/system/svxlink.service
+/etc/systemd/system/remotetrx.service
+/etc/systemd/system/svxreflector.service
+
+The 10m repeater will work fine.
+
+I have edited the crontab so that the log will be cleared once a week:
+
+0 0 * * 1 >/var/log/svxlink.log
+0 0 * * 1 >/var/log/remotetrx.log
+0 0 * * 1 >/var/log/svxreflector.log
+
+I removed the ReflectorLogic to DM0MAX.
+
+On Raspberry Pi which runs 10m TX you have:
+svxlink          --> 10m repeater controller, connects to 10m remote receiver
+svxreflector  --> connects to local reflector, works as bridge to simplex logic for 2m link trx
+
+On Raspberry Pi which runs 10m RX you have:
+remotetrx   --> connect to 10m repeater controller
+svxlink        --> runs a simplex logic, connecting to local reflector on 10m tx site
+
+The simplex logic needs a additional soundcard to work. At the moment your link trx is not working because I have no way to get it work.
+
+Because of this fact I deactivated the simplex logic on the 10m RX raspberry pi:
+sudo systemctl stop svxlink.service
+
+When you want to use it in future, you have to type
+sudo systemctl start svxlink.service
+
+Then it will connect to the local reflector again.
+
+BUT
+
+I strongly recommend that you get a raspberry pi for your 2m repeater and then connect it to the svxreflector which runs on 10m tx site. Then all your problems will be gone.
+
+Please ask local ham radio operators for help. It is very difficult to help you effectively via internet when you don´t really understand what I´m doing.
+
+You have to learn how svxlink works for yourself. As I always say you cannot destroy something. It works - or it doesn´t.
+
+When it doesn´t work, then check your configuration file and logfile again. Also check system log /var/log/syslog when erros occure.
+
+Please have a look at github.com where you always find the newest software or comments on new functions.
+There is also a discussion forum if you have any trouble:
+
+https://github.com/sm0svx/svxlink
+https://github.com/sm0svx/svxlink/issues
+https://github.com/sm0svx/svxlink/commits/master
+
+You also have a manual for svxlink, you find explanations for each file and parameter:
+https://github.com/sm0svx/svxlink/tree/master/src/doc/man
+
+For example for svxlink config file:
+https://github.com/sm0svx/svxlink/blob/master/src/doc/man/svxlink.conf.5
