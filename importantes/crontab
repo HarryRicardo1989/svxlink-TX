@@ -1,0 +1,2 @@
+0 0 * * 1 >/var/log/svxlink.log
+0 0 * * 1 >/var/log/svxreflector.log

@@ -1,0 +1,16 @@
+[Unit]
+Description=SvxLink
+After=network.target sound.target
+
+[Service]
+Restart=always
+KillMode=process
+ExecStart=/usr/bin/svxlink --config=/etc/svxlink/svxlink.conf --logfile=/var/log/svxlink.log
+RestartSec=60
+TimeoutSec=5
+User=root
+Group=root
+Environment=/root
+
+[Install]
+WantedBy=multi-user.target
